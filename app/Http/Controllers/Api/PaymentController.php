@@ -7,13 +7,91 @@ use App\Http\Requests\StorePaymentRequest;
 use App\Http\Resources\PaymentResource;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Attributes as OA;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 
 class PaymentController extends Controller
 {
+    /**
+     * Process a payment for an order.
+     */
+    #[OA\Post(
+        path: '/orders/{order}/payments',
+        operationId: 'storePayment',
+        summary: 'Procesar el pago de una orden',
+        description: 'Procesa mediante Stripe el pago de una orden pendiente.',
+        tags: ['Pagos'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'order',
+                in: 'path',
+                required: true,
+                description: 'Identificador de la orden',
+                schema: new OA\Schema(type: 'integer', example: 3)
+            ),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                ref: '#/components/schemas/StorePayment'
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 201,
+                description: 'Pago procesado correctamente',
+                content: new OA\JsonContent(
+                    ref: '#/components/schemas/PaymentResponse'
+                )
+            ),
+            new OA\Response(
+                response: 202,
+                description: 'El pago requiere una acción adicional',
+                content: new OA\JsonContent(
+                    ref: '#/components/schemas/PaymentResponse'
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Token ausente, inválido o vencido'
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'El usuario no puede pagar esta orden',
+                content: new OA\JsonContent(
+                    ref: '#/components/schemas/MessageResponse'
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Orden no encontrada'
+            ),
+            new OA\Response(
+                response: 409,
+                description: 'La orden ya fue pagada o no puede procesarse',
+                content: new OA\JsonContent(
+                    ref: '#/components/schemas/MessageResponse'
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Pago rechazado o error de validación',
+                content: new OA\JsonContent(
+                    ref: '#/components/schemas/PaymentError'
+                )
+            ),
+            new OA\Response(
+                response: 500,
+                description: 'Stripe no está configurado correctamente',
+                content: new OA\JsonContent(
+                    ref: '#/components/schemas/MessageResponse'
+                )
+            ),
+        ]
+    )]
     public function store(
         StorePaymentRequest $request,
         Order $order
