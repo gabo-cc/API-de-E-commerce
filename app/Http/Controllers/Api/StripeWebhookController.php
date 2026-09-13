@@ -12,7 +12,6 @@ use UnexpectedValueException;
 
 class StripeWebhookController extends Controller
 {
-
     public function handle(Request $request): JsonResponse
     {
         try {
@@ -40,7 +39,6 @@ class StripeWebhookController extends Controller
         ]);
     }
 
-
     private function handlePaymentSucceeded(object $paymentIntent): void
     {
         $payment = Payment::where(
@@ -63,7 +61,6 @@ class StripeWebhookController extends Controller
         ]);
     }
 
- 
     private function handlePaymentFailed(object $paymentIntent): void
     {
         $payment = Payment::where(
