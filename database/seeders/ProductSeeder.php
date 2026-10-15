@@ -12,6 +12,8 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
+        $baseUrl = 'https://xpyazbwzjpqmrvaoorbd.supabase.co/storage/v1/object/public/productos/';
+
         $products = [
             [
                 'name' => 'Laptop Lenovo IdeaPad',
@@ -19,7 +21,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Laptop para estudio y trabajo con almacenamiento SSD.',
                 'price' => 749.99,
                 'stock' => 12,
-                'image_url' => null,
+                'image_url' => $baseUrl . 'laptop-lenovo.jpg',
                 'is_active' => true,
             ],
             [
@@ -28,7 +30,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Mouse inalámbrico ergonómico con conexión USB.',
                 'price' => 24.99,
                 'stock' => 35,
-                'image_url' => null,
+                'image_url' => $baseUrl . 'mouse-logitech.jpg',
                 'is_active' => true,
             ],
             [
@@ -46,7 +48,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Monitor Full HD para oficina y entretenimiento.',
                 'price' => 189.99,
                 'stock' => 8,
-                'image_url' => null,
+                'image_url' => $baseUrl . 'monitor-samsung.jpg',
                 'is_active' => true,
             ],
             [
@@ -55,7 +57,7 @@ class ProductSeeder extends Seeder
                 'description' => 'Audífonos inalámbricos con micrófono integrado.',
                 'price' => 45.00,
                 'stock' => 25,
-                'image_url' => null,
+                'image_url' => $baseUrl . 'audifonos-bluetooth.jpg',
                 'is_active' => true,
             ],
         ];
